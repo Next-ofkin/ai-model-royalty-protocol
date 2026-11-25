@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { WagmiProvider, type Config } from 'wagmi';
 import { AuthProvider } from '../lib/auth';
+import { isInAppBrowser } from '../lib/inAppBrowser';
 import { networks, projectId, wagmiAdapter } from '../lib/wagmi';
 
 const SITE = 'https://ai-model-royalty-protocol.vercel.app';
@@ -25,7 +26,8 @@ createAppKit({
   },
   features: {
     email: true,
-    socials: ['google', 'apple', 'x', 'facebook', 'github', 'discord'],
+    // Social logins need a pop-up that can't return from in-app browsers; email still works there.
+    socials: isInAppBrowser() ? false : ['google', 'apple', 'x', 'facebook', 'github', 'discord'],
     emailShowWallets: true,
     analytics: false,
     swaps: false,

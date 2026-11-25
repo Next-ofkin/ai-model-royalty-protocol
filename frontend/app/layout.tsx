@@ -3,6 +3,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './globals.css';
 import { Providers } from './providers';
+import { InAppBanner } from '@/components/InAppBanner';
 
 const description =
   'Register AI models, sell inference credits in USDC, and pay creators their royalties automatically on-chain. Live on Base, Ethereum and Polygon.';
@@ -30,7 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <InAppBanner />
+          {children}
+        </Providers>
       </body>
     </html>
   );
