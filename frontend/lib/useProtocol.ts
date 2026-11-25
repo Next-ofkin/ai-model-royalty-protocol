@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount, usePublicClient, useReadContracts, useSignMessage, useWriteContract } from 'wagmi';
 import type { Hash } from 'viem';
 import { CONTRACTS, erc20Abi, royaltyAbi } from './contract';
-import { MODELS, PROTOCOL_FEE_BPS } from './models';
+import { MODELS, PROTOCOL_FEE_BPS, type AIModel } from './models';
 
 export type Purchase = {
   id: string;
@@ -46,7 +46,7 @@ function save(addr: string, chainId: number, s: Store) {
 
 export type BuyStage = 'idle' | 'signing' | 'approving' | 'purchasing' | 'confirming';
 
-export function useProtocol() {
+export function useProtocol(allModels: AIModel[] = MODELS) {
   const { address, chainId, isConnected } = useAccount();
   const contract = chainId ? CONTRACTS[chainId] : undefined;
   const mode: 'demo' | 'live' = contract ? 'live' : 'demo';
@@ -99,7 +99,7 @@ export function useProtocol() {
 
   const buy = useCallback(
     async (modelId: number, qty: number): Promise<Purchase> => {
-      const model = MODELS.find((m) => m.id === modelId);
+      const model = allModels.find((m) => m.id === modelId);
       if (!model || !address || !chainId) throw new Error('Connect a wallet first');
       const total = +(model.price * qty).toFixed(6);
       const protocolFee = +((total * PROTOCOL_FEE_BPS) / 10_000).toFixed(6);
@@ -139,6 +139,7 @@ export function useProtocol() {
         }
 
         // ---- Live on-chain purchase ----
+        if (model.community) throw new Error('Community models are demo-only until they are registered on-chain.');
         if (!publicClient || !contract) throw new Error('No RPC client');
         const [token, onchain] = await Promise.all([
           publicClient.readContract({ address: contract, abi: royaltyAbi, functionName: 'paymentToken' }),
@@ -173,7 +174,7 @@ export function useProtocol() {
         setStage(null);
       }
     },
-    [address, chainId, mode, contract, publicClient, signMessageAsync, writeContractAsync, record, live, store.usdc],
+    [address, chainId, mode, contract, publicClient, signMessageAsync, writeContractAsync, record, live, store.usdc, allModels],
   );
 
   const faucet = useCallback(() => {
@@ -194,5 +195,5 @@ export function useProtocol() {
   const totalCredits = Object.values(credits).reduce((a, b) => a + b, 0);
   const totalSpent = store.history.reduce((a, p) => a + p.total, 0);
 
-  return { isConnected, address, chainId, mode, credits, totalCredits, totalSpent, history: store.history, usdc: store.usdc, buy, faucet, stage, reset };
+  return { models: allModels, isConnected, address, chainId, mode, credits, totalCredits, totalSpent, history: store.history, usdc: store.usdc, buy, faucet, stage, reset };
 }

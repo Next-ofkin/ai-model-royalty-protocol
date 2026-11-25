@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { WagmiProvider } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { config } from '../lib/wagmi';
+import { AuthProvider } from '../lib/auth';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -23,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           })}
           appInfo={{ appName: 'AI Model Royalty Protocol' }}
         >
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

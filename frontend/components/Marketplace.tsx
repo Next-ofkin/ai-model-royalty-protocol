@@ -2,7 +2,8 @@
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
-import { MODELS, PROTOCOL_FEE_BPS, fmtUsd, shortAddr, type AIModel } from '@/lib/models';
+import Link from 'next/link';
+import { PROTOCOL_FEE_BPS, fmtUsd, shortAddr, type AIModel } from '@/lib/models';
 import type { BuyStage, useProtocol } from '@/lib/useProtocol';
 
 type P = ReturnType<typeof useProtocol>;
@@ -46,7 +47,12 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
         >
           {model.glyph}
         </div>
-        <span className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-zinc-400">{model.category}</span>
+        <div className="flex flex-wrap justify-end gap-1.5">
+          {model.community && (
+            <span className="rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-medium text-mint">Community</span>
+          )}
+          <span className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-zinc-400">{model.category}</span>
+        </div>
       </div>
 
       <h3 className="mt-5 text-lg font-semibold tracking-tight">{model.name}</h3>
@@ -69,14 +75,31 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
           <div className="font-mono text-sm text-zinc-100">${fmtUsd(model.price)}</div>
           <div className="text-[11px] text-zinc-500">per call</div>
         </div>
-        <div>
-          <div className="font-mono text-sm text-zinc-100">{(model.inferences / 1000).toFixed(1)}k</div>
-          <div className="text-[11px] text-zinc-500">inferences</div>
-        </div>
-        <div>
-          <div className="font-mono text-sm text-zinc-100">{model.latencyMs < 1000 ? `${model.latencyMs}ms` : `${(model.latencyMs / 1000).toFixed(1)}s`}</div>
-          <div className="text-[11px] text-zinc-500">p50 latency</div>
-        </div>
+        {model.community ? (
+          <>
+            <div>
+              <div className="font-mono text-sm text-mint">New</div>
+              <div className="text-[11px] text-zinc-500">listing</div>
+            </div>
+            <div>
+              <div className="font-mono text-sm text-zinc-100">98%</div>
+              <div className="text-[11px] text-zinc-500">to creator</div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <div className="font-mono text-sm text-zinc-100">{(model.inferences / 1000).toFixed(1)}k</div>
+              <div className="text-[11px] text-zinc-500">inferences</div>
+            </div>
+            <div>
+              <div className="font-mono text-sm text-zinc-100">
+                {model.latencyMs < 1000 ? `${model.latencyMs}ms` : `${(model.latencyMs / 1000).toFixed(1)}s`}
+              </div>
+              <div className="text-[11px] text-zinc-500">p50 latency</div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="mt-auto pt-5">
@@ -171,9 +194,38 @@ export function Marketplace({ p }: { p: P }) {
       </div>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {MODELS.map((m) => (
-          <ModelCard key={m.id} model={m} p={p} onResult={onResult} />
-        ))}
+        {p.models
+          .filter((m) => !m.community)
+          .map((m) => (
+            <ModelCard key={m.id} model={m} p={p} onResult={onResult} />
+          ))}
+      </div>
+
+      <div className="mt-16 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <h3 className="text-2xl font-semibold tracking-tight">Community models</h3>
+          <p className="mt-2 max-w-xl text-sm text-zinc-400">
+            Listed by builders who signed in with their wallet. Anyone can list a model in about a minute.
+          </p>
+        </div>
+        <Link href="/list" className="btn-ghost self-start sm:self-auto">
+          + List your model
+        </Link>
+      </div>
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        {p.models
+          .filter((m) => m.community)
+          .map((m) => (
+            <ModelCard key={m.id} model={m} p={p} onResult={onResult} />
+          ))}
+        <Link
+          href="/list"
+          className="group flex min-h-[220px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 p-6 text-center transition hover:border-accent/60 hover:bg-accent/5"
+        >
+          <span className="grid h-12 w-12 place-items-center rounded-xl border border-white/10 text-2xl text-zinc-400 transition group-hover:text-white">+</span>
+          <span className="mt-4 font-medium">List your AI model</span>
+          <span className="mt-1 max-w-[220px] text-sm text-zinc-500">Sign in with your wallet, set a price and start earning 98% of every sale.</span>
+        </Link>
       </div>
 
       <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-5 z-50 flex justify-center px-4">

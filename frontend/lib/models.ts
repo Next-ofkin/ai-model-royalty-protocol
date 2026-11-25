@@ -15,6 +15,10 @@ export type AIModel = {
   /** Tailwind gradient classes for the card glyph */
   gradient: string;
   glyph: string;
+  /** Listed by a user through the "List your model" page */
+  community?: boolean;
+  endpointUrl?: string;
+  dbId?: number;
 };
 
 export const MODELS: AIModel[] = [

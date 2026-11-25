@@ -2,17 +2,19 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
+import { SignInButton } from './SignInButton';
 
 const NAV = [
-  { href: '#models', label: 'Models' },
-  { href: '#dashboard', label: 'Dashboard' },
-  { href: '#how', label: 'How it works' },
+  { href: '/#models', label: 'Models' },
+  { href: '/#dashboard', label: 'Dashboard' },
+  { href: '/list', label: 'List a model' },
+  { href: '/#how', label: 'How it works' },
   { href: 'https://github.com/Next-ofkin/ai-model-royalty-protocol', label: 'GitHub', external: true },
 ];
 
 export function Logo({ alwaysShowName = false }: { alwaysShowName?: boolean }) {
   return (
-    <a href="#top" className="flex items-center gap-2.5" aria-label="AI Model Royalty Protocol home">
+    <a href="/" className="flex items-center gap-2.5" aria-label="AI Model Royalty Protocol home">
       <span className="relative grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-accent to-mint shadow-glow">
         <svg viewBox="0 0 24 24" className="h-4 w-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.2">
           <path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z" strokeLinejoin="round" />
@@ -32,7 +34,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-ink-950/70 backdrop-blur-xl">
       <div className="container-x flex h-16 items-center justify-between gap-4">
         <Logo />
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {NAV.map((n) => (
             <a
               key={n.href}
@@ -46,9 +48,10 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <SignInButton className="hidden lg:inline-flex" />
           <ConnectButton chainStatus="icon" accountStatus={{ smallScreen: 'avatar', largeScreen: 'full' }} showBalance={false} />
           <button
-            className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 md:hidden"
+            className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -60,7 +63,10 @@ export function Header() {
         </div>
       </div>
       {open && (
-        <nav className="container-x flex flex-col gap-1 pb-4 md:hidden">
+        <nav className="container-x flex flex-col gap-1 pb-4 lg:hidden">
+          <div className="px-3 pb-2">
+            <SignInButton full />
+          </div>
           {NAV.map((n) => (
             <a
               key={n.href}

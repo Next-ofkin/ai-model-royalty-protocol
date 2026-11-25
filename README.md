@@ -62,6 +62,8 @@ The contract that takes real payments is already written. It goes live once it's
   - **Demo mode** (default): each wallet starts with 100 demo USDC that goes down with every purchase, with a top-up button. Buying asks for a free, gasless signature. Credits, balance and the 98/2 split are saved per wallet and chain in the browser.
   - **Live mode**: set a deployed contract address and the same buttons read `userCredits` on-chain and run `approve` → `purchaseInferences` with real USDC
 - Dashboard with credit balances, USDC spent, royalties paid and a royalty activity feed
+- **Sign in with your wallet** (Sign-In with Ethereum): a free, one-time signature proves you own the wallet. It's checked on the server with a one-time code, then you get a secure 7-day session
+- **List your model** (`/list`): signed-in builders add a model (name, description, category, price, optional API link, tags) with a live preview. Listings are saved in **Neon Postgres** and show in the marketplace under *Community models*, where anyone can buy credits for them
 - "How it works" section, dark responsive design and mobile navigation
 
 ## How it works
@@ -90,6 +92,7 @@ The contract that takes real payments is already written. It goes live once it's
 | --- | --- |
 | Smart contract | Solidity 0.8.20, OpenZeppelin |
 | Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
+| Backend | Next.js API routes, Sign-In with Ethereum (viem/siwe), Neon Postgres |
 | Web3 | RainbowKit, wagmi, viem |
 | Payments | USDC on Base, Ethereum and Polygon |
 | Hosting | Vercel |
@@ -107,6 +110,8 @@ npm run dev                  # http://localhost:3000
 | --- | --- |
 | `NEXT_PUBLIC_WC_PROJECT_ID` | Free WalletConnect / Reown project ID from cloud.reown.com. Enables QR-code and mobile-app connections. Browser-extension wallets and in-wallet browsers work without it. |
 | `NEXT_PUBLIC_CONTRACT_BASE` / `NEXT_PUBLIC_CONTRACT_MAINNET` / `NEXT_PUBLIC_CONTRACT_POLYGON` | Deployed contract address per chain. Leave blank to stay in demo mode. |
+| `DATABASE_URL` | Neon (or any Postgres) connection string. Added automatically by Vercel → Storage → Neon. Tables are created on first use. Without it, sign-in and listing stay hidden. |
+| `SESSION_SECRET` | Optional. Secret for signing session cookies (falls back to one derived from `DATABASE_URL`). |
 
 ## Deploy on Vercel
 
@@ -116,7 +121,8 @@ Import the repo, set **Root Directory** to `frontend` and keep the Next.js prese
 
 - ✅ Web app live in demo mode
 - ✅ Smart contract written
-- ⏳ Next: contract tests, a testnet deployment (Base Sepolia) and a security review before handling real funds
+- ✅ Wallet sign-in and community model listings (Neon Postgres)
+- ⏳ Next: an API gateway that checks credits and forwards requests to each model's API, contract tests, a testnet deployment (Base Sepolia) and a security review before handling real funds
 
 ---
 

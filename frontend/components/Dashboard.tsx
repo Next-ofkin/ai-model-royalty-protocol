@@ -2,7 +2,7 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { CHAIN_META } from '@/lib/contract';
-import { MODELS, fmtUsd, shortAddr } from '@/lib/models';
+import { fmtUsd, shortAddr } from '@/lib/models';
 import type { useProtocol } from '@/lib/useProtocol';
 
 type P = ReturnType<typeof useProtocol>;
@@ -17,7 +17,8 @@ function timeAgo(t: number) {
 
 export function Dashboard({ p }: { p: P }) {
   const chain = p.chainId ? CHAIN_META[p.chainId] : undefined;
-  const maxCredits = Math.max(1, ...MODELS.map((m) => p.credits[m.id] || 0));
+  const owned = p.models.filter((m) => !m.community || (p.credits[m.id] || 0) > 0);
+  const maxCredits = Math.max(1, ...owned.map((m) => p.credits[m.id] || 0));
   const royalties = p.history.reduce((a, h) => a + h.creatorShare, 0);
 
   return (
@@ -100,7 +101,7 @@ export function Dashboard({ p }: { p: P }) {
                 ))}
               </div>
               <ul className="mt-6 space-y-4">
-                {MODELS.map((m) => {
+                {owned.map((m) => {
                   const c = p.credits[m.id] || 0;
                   return (
                     <li key={m.id}>
@@ -139,7 +140,8 @@ export function Dashboard({ p }: { p: P }) {
               ) : (
                 <ol className="mt-4 max-h-80 space-y-2.5 overflow-y-auto pr-1">
                   {p.history.map((h) => {
-                    const m = MODELS.find((x) => x.id === h.modelId)!;
+                    const m = p.models.find((x) => x.id === h.modelId);
+                    if (!m) return null;
                     const explorer = CHAIN_META[h.chainId]?.explorer;
                     return (
                       <li key={h.id} className="rounded-xl border border-white/[0.06] bg-ink-900/60 p-3.5">
