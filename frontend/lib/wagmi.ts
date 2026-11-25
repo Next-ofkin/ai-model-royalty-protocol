@@ -12,7 +12,8 @@ import { base, mainnet, polygon } from 'wagmi/chains';
 
 // A WalletConnect (Reown) project ID enables QR-code / mobile wallets (Trust Wallet app, Rainbow, etc.).
 // Browser-extension wallets and in-wallet dApp browsers work without it.
-const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || '00000000000000000000000000000000';
+// Public client ID (safe to commit). Override with NEXT_PUBLIC_WC_PROJECT_ID if needed.
+const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || '4b58efdf33949ef8ebac9e7d4b979922';
 
 export const config = getDefaultConfig({
   appName: 'AI Model Royalty Protocol',
