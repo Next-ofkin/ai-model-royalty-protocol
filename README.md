@@ -56,7 +56,7 @@ The contract that takes real payments is already written. It goes live once it's
 - Built on OpenZeppelin `Ownable`, `ReentrancyGuard` and `IERC20`
 
 **Web app** (`frontend/`)
-- Wallet connection on **Base, Ethereum and Polygon** (MetaMask, Trust Wallet, Coinbase Wallet, Rainbow and WalletConnect)
+- Wallet connection on **Base, Ethereum and Polygon** (MetaMask, Trust Wallet, Coinbase, Binance, OKX, Bitget, Bybit, Phantom, SafePal and 300+ more through WalletConnect)
 - Marketplace of four sample AI models showing creator, price, description and stats
 - **Buy Credits** in two modes:
   - **Demo mode** (default): each wallet starts with 100 demo USDC that goes down with every purchase, with a top-up button. Buying asks for a free, gasless signature. Credits, balance and the 98/2 split are saved per wallet and chain in the browser.

@@ -121,7 +121,12 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
                 ? 'Top up demo USDC'
                 : STAGE_LABEL.idle}
         </button>
-        {p.isConnected && (
+        {busy && (
+          <p className="mt-2.5 rounded-lg bg-accent/10 px-3 py-2 text-center text-xs text-accent-soft">
+            Approve in your wallet. On a phone, switch back to this page after signing.
+          </p>
+        )}
+        {p.isConnected && !busy && (
           <p className="mt-2.5 text-center text-xs text-zinc-500">
             Your balance: <span className="font-mono text-zinc-200">{owned}</span> credits
           </p>
