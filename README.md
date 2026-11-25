@@ -1,5 +1,7 @@
 # AI Model Royalty Protocol
 
+**Live demo:** https://ai-model-royalty-protocol.vercel.app · **Case study:** https://portfolio.dastrings.name.ng/work/ai-model-royalty-protocol
+
 A production-grade on-chain system for AI model licensing, inference credits, and automated royalty distribution.
 
 ## Why this exists
