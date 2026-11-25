@@ -30,7 +30,7 @@ An on-chain marketplace where AI builders sell access to their models and get pa
 
 The rules live in a **smart contract**. Think of it as a vending machine that nobody can tamper with. You put money in, and it always does exactly what it was built to do: it gives Amaka her credits and drops Tunde's share into his wallet. Nobody can quietly change the price, hold back Tunde's money or fake the sales numbers, because anyone can check the machine's records.
 
-A **wallet** (Trust Wallet, MetaMask, Coinbase Wallet and others) is your bank app and ID card in one. It holds your digital money and proves who you are.
+A **wallet** (Trust Wallet, MetaMask, Coinbase Wallet and others) is your bank app and ID card in one. It holds your digital money and proves who you are. No wallet? Sign up with **email or Google** and one is created for you.
 
 ### What the website does today
 
@@ -56,7 +56,7 @@ The contract that takes real payments is already written. It goes live once it's
 - Built on OpenZeppelin `Ownable`, `ReentrancyGuard` and `IERC20`
 
 **Web app** (`frontend/`)
-- Wallet connection on **Base, Ethereum and Polygon** (MetaMask, Trust Wallet, Coinbase, Binance, OKX, Bitget, Bybit, Phantom, SafePal and 300+ more through WalletConnect)
+- One connect window (Reown AppKit) on **Base, Ethereum and Polygon**: MetaMask, Trust Wallet, Coinbase, Binance, OKX and 300+ more wallets, **or sign up with email, Google, Apple, X, Facebook, GitHub or Discord**. Email and social users get a wallet created for them automatically, so no crypto knowledge is needed
 - Marketplace of four sample AI models showing creator, price, description and stats
 - **Buy Credits** in two modes:
   - **Demo mode** (default): each wallet starts with 100 demo USDC that goes down with every purchase, with a top-up button. Buying asks for a free, gasless signature. Credits, balance and the 98/2 split are saved per wallet and chain in the browser.
@@ -93,7 +93,7 @@ The contract that takes real payments is already written. It goes live once it's
 | Smart contract | Solidity 0.8.20, OpenZeppelin |
 | Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
 | Backend | Next.js API routes, Sign-In with Ethereum (viem/siwe), Neon Postgres |
-| Web3 | RainbowKit, wagmi, viem |
+| Web3 | Reown AppKit (wallets + email/social login), wagmi, viem |
 | Payments | USDC on Base, Ethereum and Polygon |
 | Hosting | Vercel |
 

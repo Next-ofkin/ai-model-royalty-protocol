@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
-import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 import { Providers } from './providers';
 

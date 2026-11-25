@@ -1,6 +1,6 @@
 'use client';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from './ConnectButton';
 import { useState } from 'react';
 import { SignInButton } from './SignInButton';
 
@@ -49,7 +49,7 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <SignInButton className="hidden lg:inline-flex" />
-          <ConnectButton chainStatus="icon" accountStatus={{ smallScreen: 'avatar', largeScreen: 'full' }} showBalance={false} />
+          <ConnectButton />
           <button
             className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 lg:hidden"
             onClick={() => setOpen((v) => !v)}

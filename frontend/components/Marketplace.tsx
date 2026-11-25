@@ -1,6 +1,6 @@
 'use client';
 
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useOpenConnect } from './ConnectButton';
 import { useState } from 'react';
 import Link from 'next/link';
 import { PROTOCOL_FEE_BPS, fmtUsd, shortAddr, type AIModel } from '@/lib/models';
@@ -19,7 +19,7 @@ const STAGE_LABEL: Record<BuyStage, string> = {
 
 function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok: boolean, msg: string) => void }) {
   const [qty, setQty] = useState(10);
-  const { openConnectModal } = useConnectModal();
+  const openConnect = useOpenConnect();
   const busy = p.stage?.modelId === model.id;
   const anyBusy = !!p.stage;
   const total = model.price * qty;
@@ -28,7 +28,7 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
   const short = p.isConnected && p.mode === 'demo' && total > p.usdc + 1e-9;
 
   async function handleBuy() {
-    if (!p.isConnected) return openConnectModal?.();
+    if (!p.isConnected) return openConnect();
     try {
       await p.buy(model.id, qty);
       onResult(true, `${qty} credits added for ${model.name}. ${fmtUsd(total - fee)} USDC routed to ${model.creatorName}.`);

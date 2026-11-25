@@ -1,11 +1,11 @@
 'use client';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { ConnectButton } from '@/components/ConnectButton';
 import { SignInButton } from '@/components/SignInButton';
 import { errMsg, useAuth } from '@/lib/auth';
 import { CATEGORIES, MAX_MODELS_PER_CREATOR, validateListing } from '@/lib/listing';
@@ -129,8 +129,8 @@ export default function ListPage() {
           <div className="mt-10 grid gap-8 lg:grid-cols-5">
             <div className="lg:col-span-3">
               <ol className="space-y-3">
-                <Step n={1} title="Connect your wallet" done={isConnected}>
-                  {!isConnected && <ConnectButton />}
+                <Step n={1} title="Connect a wallet, or sign up with email" done={isConnected}>
+                  {!isConnected && <ConnectButton label="Connect or sign up" />}
                 </Step>
                 <Step n={2} title="Sign in (free, no transaction)" done={!!user}>
                   {isConnected && !user && (

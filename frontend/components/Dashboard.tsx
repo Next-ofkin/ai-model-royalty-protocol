@@ -1,6 +1,6 @@
 'use client';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from './ConnectButton';
 import { CHAIN_META } from '@/lib/contract';
 import { fmtUsd, shortAddr } from '@/lib/models';
 import type { useProtocol } from '@/lib/useProtocol';
@@ -57,11 +57,10 @@ export function Dashboard({ p }: { p: P }) {
             </div>
             <h3 className="mt-5 text-lg font-medium">Connect a wallet to see your credits</h3>
             <p className="mt-2 max-w-sm text-sm text-zinc-500">
-              MetaMask, Coinbase Wallet, Rainbow and other WalletConnect wallets are supported on Base, Ethereum and
-              Polygon.
+              Use Trust Wallet, MetaMask, Binance and 300+ other wallets, or sign up with email or Google. New to crypto? A wallet is created for you.
             </p>
             <div className="mt-6">
-              <ConnectButton />
+              <ConnectButton size="lg" label="Connect wallet or sign up with email" />
             </div>
           </div>
         ) : (
