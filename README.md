@@ -47,7 +47,7 @@ The `frontend/` app is a Next.js 14 (App Router) + TypeScript + Tailwind CSS dAp
 - Wallet connection on **Base, Ethereum and Polygon**
 - Marketplace of four sample AI models with price, creator and description
 - **Buy Credits** in two modes:
-  - **Demo mode** (default): the wallet signs a free, gasless purchase receipt; credits and the 98/2 royalty split are tracked per wallet and chain in the browser
+  - **Demo mode** (default): each wallet gets a 100 demo-USDC balance (top up any time). Buying asks for a free, gasless signature, deducts demo USDC and tracks credits and the 98/2 royalty split per wallet and chain in the browser. No real money moves
   - **Live mode**: set a deployed contract address and the app reads `userCredits` on-chain and runs `approve` → `purchaseInferences` for real
 - Credit-balance dashboard with a royalty activity feed
 - Fully responsive, dark UI

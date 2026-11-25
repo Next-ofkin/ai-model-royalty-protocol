@@ -24,6 +24,7 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
   const total = model.price * qty;
   const fee = (total * PROTOCOL_FEE_BPS) / 10_000;
   const owned = p.credits[model.id] || 0;
+  const short = p.isConnected && p.mode === 'demo' && total > p.usdc + 1e-9;
 
   async function handleBuy() {
     if (!p.isConnected) return openConnectModal?.();
@@ -105,14 +106,20 @@ function ModelCard({ model, p, onResult }: { model: AIModel; p: P; onResult: (ok
             <span className="text-accent-soft">{fmtUsd(fee)}</span> protocol fee
           </span>
         </div>
-        <button onClick={handleBuy} disabled={anyBusy && !busy} className="btn-primary mt-4 w-full" aria-busy={busy}>
+        <button onClick={short ? p.faucet : handleBuy} disabled={anyBusy && !busy} className="btn-primary mt-4 w-full" aria-busy={busy}>
           {busy && (
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity=".25" strokeWidth="3" />
               <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
             </svg>
           )}
-          {!p.isConnected ? 'Connect wallet to buy' : busy ? STAGE_LABEL[p.stage!.stage] : STAGE_LABEL.idle}
+          {!p.isConnected
+            ? 'Connect wallet to buy'
+            : busy
+              ? STAGE_LABEL[p.stage!.stage]
+              : short
+                ? 'Top up demo USDC'
+                : STAGE_LABEL.idle}
         </button>
         {p.isConnected && (
           <p className="mt-2.5 text-center text-xs text-zinc-500">
@@ -150,6 +157,9 @@ export function Marketplace({ p }: { p: P }) {
           ) : (
             <>
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> Demo mode · free signature, no gas
+              {p.isConnected && (
+                <span className="ml-1 border-l border-white/10 pl-2 font-mono text-zinc-200">{fmtUsd(p.usdc)} USDC</span>
+              )}
             </>
           )}
         </div>

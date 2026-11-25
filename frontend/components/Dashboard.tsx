@@ -66,6 +66,27 @@ export function Dashboard({ p }: { p: P }) {
         ) : (
           <div className="grid lg:grid-cols-5">
             <div className="p-6 lg:col-span-3 lg:border-r lg:border-white/[0.06]">
+              {p.mode === 'demo' && (
+                <div className="mb-4 flex flex-col gap-4 rounded-xl border border-white/[0.08] bg-gradient-to-br from-accent/15 via-ink-900/60 to-mint/10 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-3.5">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#2775ca] font-semibold text-white" aria-hidden>
+                      $
+                    </span>
+                    <div>
+                      <div className="text-[11px] uppercase tracking-wider text-zinc-400">Wallet balance · demo USDC</div>
+                      <div className="mt-0.5 font-mono text-2xl font-medium">
+                        {fmtUsd(p.usdc)} <span className="text-sm text-zinc-400">USDC</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-start gap-1 sm:items-end">
+                    <button onClick={p.faucet} className="btn-ghost !px-4 !py-2">
+                      + Get 100 demo USDC
+                    </button>
+                    <span className="text-[11px] text-zinc-500">Test tokens. No real money is used.</span>
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { k: 'Total credits', v: p.totalCredits.toLocaleString() },

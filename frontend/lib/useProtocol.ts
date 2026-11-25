@@ -19,15 +19,19 @@ export type Purchase = {
   ref: string; // signature (demo) or tx hash (live)
 };
 
-type Store = { credits: Record<number, number>; history: Purchase[] };
-const empty: Store = { credits: {}, history: [] };
-const key = (addr: string, chainId: number) => `amrp:v1:${chainId}:${addr.toLowerCase()}`;
+type Store = { credits: Record<number, number>; history: Purchase[]; usdc: number };
+export const DEMO_START_USDC = 100;
+export const DEMO_FAUCET_USDC = 100;
+const empty: Store = { credits: {}, history: [], usdc: DEMO_START_USDC };
+const key = (addr: string, chainId: number) => `amrp:v2:${chainId}:${addr.toLowerCase()}`;
 
 function load(addr?: string, chainId?: number): Store {
   if (!addr || !chainId || typeof window === 'undefined') return empty;
   try {
     const raw = window.localStorage.getItem(key(addr, chainId));
-    return raw ? (JSON.parse(raw) as Store) : empty;
+    if (!raw) return empty;
+    const s = JSON.parse(raw) as Partial<Store>;
+    return { credits: s.credits ?? {}, history: s.history ?? [], usdc: typeof s.usdc === 'number' ? s.usdc : DEMO_START_USDC };
   } catch {
     return empty;
   }
@@ -84,6 +88,7 @@ export function useProtocol() {
         const next: Store = {
           credits: addCredits ? { ...prev.credits, [p.modelId]: (prev.credits[p.modelId] || 0) + p.qty } : prev.credits,
           history: [p, ...prev.history].slice(0, 25),
+          usdc: p.mode === 'demo' ? +(prev.usdc - p.total).toFixed(6) : prev.usdc,
         };
         save(address, chainId, next);
         return next;
@@ -111,6 +116,9 @@ export function useProtocol() {
 
       try {
         if (mode === 'demo') {
+          if (total > store.usdc + 1e-9) {
+            throw new Error(`Not enough demo USDC: this costs ${total} and you have ${+store.usdc.toFixed(3)}. Tap "Get 100 demo USDC" in your dashboard.`);
+          }
           setStage({ modelId, stage: 'signing' });
           const message = [
             'AI Model Royalty Protocol — demo purchase',
@@ -165,8 +173,17 @@ export function useProtocol() {
         setStage(null);
       }
     },
-    [address, chainId, mode, contract, publicClient, signMessageAsync, writeContractAsync, record, live],
+    [address, chainId, mode, contract, publicClient, signMessageAsync, writeContractAsync, record, live, store.usdc],
   );
+
+  const faucet = useCallback(() => {
+    if (!address || !chainId) return;
+    setStore((prev) => {
+      const next = { ...prev, usdc: +(prev.usdc + DEMO_FAUCET_USDC).toFixed(6) };
+      save(address, chainId, next);
+      return next;
+    });
+  }, [address, chainId]);
 
   const reset = useCallback(() => {
     if (!address || !chainId) return;
@@ -177,5 +194,5 @@ export function useProtocol() {
   const totalCredits = Object.values(credits).reduce((a, b) => a + b, 0);
   const totalSpent = store.history.reduce((a, p) => a + p.total, 0);
 
-  return { isConnected, address, chainId, mode, credits, totalCredits, totalSpent, history: store.history, buy, stage, reset };
+  return { isConnected, address, chainId, mode, credits, totalCredits, totalSpent, history: store.history, usdc: store.usdc, buy, faucet, stage, reset };
 }
